@@ -1,33 +1,3 @@
-<?php
-session_start();
-error_reporting(0);
-include('includes/config.php');
-if($_SESSION['alogin']!=''){
-$_SESSION['alogin']='';
-}
-if(isset($_POST['login']))
-{
-$uname=$_POST['username'];
-$password=md5($_POST['password']);
-$sql ="SELECT UserName,Password FROM admin WHERE UserName=:uname and Password=:password";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':uname', $uname, PDO::PARAM_STR);
-$query-> bindParam(':password', $password, PDO::PARAM_STR);
-$query-> execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-if($query->rowCount() > 0)
-{
-$_SESSION['alogin']=$_POST['username'];
-echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
-} else{
-
-    echo "<script>alert('Invalid Details');</script>";
-
-}
-
-}
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +5,7 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Admin Login</title>
+        <title>index Login</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
