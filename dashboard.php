@@ -40,7 +40,7 @@ if(strlen($_SESSION['alogin'])=="")
                             <div class="row page-title-div">
                                 <div class="col-sm-6">
                                     <h2 class="title">Dashboard</h2>
-                                  
+                                  <a href="teacher_dashboard.php">teacher_dashboard</a>
                                 </div>
                                 <!-- /.col-sm-6 -->
                             </div>
@@ -118,6 +118,7 @@ $totalresults=$query3->rowCount();
                                             <span class="name">Results Declared</span>
                                             <span class="bg-icon"><i class="fa fa-file-text"></i></span>
                                         </a>
+                                        
                                         <!-- /.dashboard-stat -->
                                     </div>
                                     <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
@@ -171,8 +172,8 @@ $totalresults=$query3->rowCount();
 
                 // Counter for dashboard stats
                 $('.counter').counterUp({
-                    delay: 10,
-                    time: 1000
+                    delay: 5,
+                    time: 500,
                 });
 
                 // Welcome notification
