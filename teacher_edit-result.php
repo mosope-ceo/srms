@@ -7,36 +7,30 @@ if(strlen($_SESSION['alogin'])=="")
     header("Location: index.php"); 
     }
     else{
+
+$stid=intval($_GET['stid']);
 if(isset($_POST['submit']))
 {
-$studentname=$_POST['fullanme'];
-$roolid=$_POST['rollid']; 
-$studentemail=$_POST['emailid']; 
-$gender=$_POST['gender']; 
-$classid=$_POST['class']; 
-$dob=$_POST['dob']; 
-$status=1;
-$sql="INSERT INTO  tblstudents(StudentName,RollId,StudentEmail,Gender,ClassId,DOB,Status) VALUES(:studentname,:roolid,:studentemail,:gender,:classid,:dob,:status)";
+
+$rowid=$_POST['id'];
+$marks=$_POST['marks']; 
+
+foreach($_POST['id'] as $count => $id){
+$mrks=$marks[$count];
+$iid=$rowid[$count];
+for($i=0;$i<=$count;$i++) {
+
+$sql="update tblresult  set marks=:mrks where id=:iid ";
 $query = $dbh->prepare($sql);
-$query->bindParam(':studentname',$studentname,PDO::PARAM_STR);
-$query->bindParam(':roolid',$roolid,PDO::PARAM_STR);
-$query->bindParam(':studentemail',$studentemail,PDO::PARAM_STR);
-$query->bindParam(':gender',$gender,PDO::PARAM_STR);
-$query->bindParam(':classid',$classid,PDO::PARAM_STR);
-$query->bindParam(':dob',$dob,PDO::PARAM_STR);
-$query->bindParam(':status',$status,PDO::PARAM_STR);
+$query->bindParam(':mrks',$mrks,PDO::PARAM_STR);
+$query->bindParam(':iid',$iid,PDO::PARAM_STR);
 $query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
-{
-$msg="Student info added successfully";
+
+$msg="Result info updated successfully";
 }
-else 
-{
-$error="Something went wrong. Please try again";
+}
 }
 
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +38,7 @@ $error="Something went wrong. Please try again";
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Student Admission< </title>
+        <title>Teacher| Student result info < </title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -72,7 +66,7 @@ $error="Something went wrong. Please try again";
                      <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Student Admission</h2>
+                                    <h2 class="title">Student Result Info</h2>
                                 
                                 </div>
                                 
@@ -84,7 +78,7 @@ $error="Something went wrong. Please try again";
                                     <ul class="breadcrumb">
                                         <li><a href="teacher_dashboard.php"><i class="fa fa-home"></i> Home</a></li>
                                 
-                                        <li class="active">Student Admission</li>
+                                        <li class="active">Result Info</li>
                                     </ul>
                                 </div>
                              
@@ -98,7 +92,7 @@ $error="Something went wrong. Please try again";
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title">
-                                                    <h5>Fill the Student info</h5>
+                                                    <h5>Update the Result info</h5>
                                                 </div>
                                             </div>
                                             <div class="panel-body">
@@ -113,68 +107,67 @@ else if($error){?>
                                         <?php } ?>
                                                 <form class="form-horizontal" method="post">
 
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Full Name</label>
-<div class="col-sm-10">
-<input type="text" name="fullanme" class="form-control" id="fullanme" required="required" autocomplete="off">
-</div>
-</div>
+<?php 
 
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Student No</label>
-<div class="col-sm-10">
-<input type="text" name="rollid" class="form-control" id="rollid" maxlength="5" required="required" autocomplete="off">
-</div>
-</div>
-
-
-
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Gender</label>
-<div class="col-sm-10">
-<input type="radio" name="gender" value="Male" required="required" checked="">Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required">Other
-</div>
-</div>
-
-
-
-
-
-
-
-
+$ret = "SELECT tblstudents.StudentName,tblclasses.ClassName,tblclasses.Section from tblresult join tblstudents on tblresult.StudentId=tblresult.StudentId join tblsubjects on tblsubjects.id=tblresult.SubjectId join tblclasses on tblclasses.id=tblstudents.ClassId where tblstudents.StudentId=:stid limit 1";
+$stmt = $dbh->prepare($ret);
+$stmt->bindParam(':stid',$stid,PDO::PARAM_STR);
+$stmt->execute();
+$result=$stmt->fetchAll(PDO::FETCH_OBJ);
+$cnt=1;
+if($stmt->rowCount() > 0)
+{
+foreach($result as $row)
+{  ?>
 
 
                                                     <div class="form-group">
-                                                        <label for="default" class="col-sm-2 control-label">Class</label>
+                                            <label for="default" class="col-sm-2 control-label">Class</label>
                                                         <div class="col-sm-10">
- <select name="class" class="form-control" id="default" required="required">
-<option value="">Select Class</option>
-<?php $sql = "SELECT * from tblclasses";
-$query = $dbh->prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{   ?>
-<option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassName); ?>&nbsp; Section-<?php echo htmlentities($result->Section); ?></option>
-<?php }} ?>
- </select>
+<?php echo htmlentities($row->ClassName)?>(<?php echo htmlentities($row->Section)?>)
                                                         </div>
                                                     </div>
 <div class="form-group">
-                                                        <label for="date" class="col-sm-2 control-label">DOB</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="date"  name="dob" class="form-control" id="date">
-                                                        </div>
-                                                    </div>
-                                                    
+<label for="default" class="col-sm-2 control-label">Full Name</label>
+<div class="col-sm-10">
+<?php echo htmlentities($row->StudentName);?>
+</div>
+</div>
+<?php } }?>
+
+
+
+<?php 
+$sql = "SELECT distinct tblstudents.StudentName,tblstudents.StudentId,tblclasses.ClassName,tblclasses.Section,tblsubjects.SubjectName,tblresult.marks,tblresult.id as resultid from tblresult join tblstudents on tblstudents.StudentId=tblresult.StudentId join tblsubjects on tblsubjects.id=tblresult.SubjectId join tblclasses on tblclasses.id=tblstudents.ClassId where tblstudents.StudentId=:stid ";
+$query = $dbh->prepare($sql);
+$query->bindParam(':stid',$stid,PDO::PARAM_STR);
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$cnt=1;
+if($query->rowCount() > 0)
+{
+foreach($results as $result)
+{  ?>
+
+
+
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label"><?php echo htmlentities($result->SubjectName)?></label>
+<div class="col-sm-10">
+<input type="hidden" name="id[]" value="<?php echo htmlentities($result->resultid)?>">
+<input type="text" name="marks[]" class="form-control" id="marks" value="<?php echo htmlentities($result->marks)?>" maxlength="5" required="required" autocomplete="off">
+</div>
+</div>
+
+
+
+
+<?php }} ?>                                                    
 
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-offset-2 col-sm-10">
-                                                            <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                                            <button type="submit" name="submit" class="btn btn-primary">Update</button>
                                                         </div>
                                                     </div>
                                                 </form>

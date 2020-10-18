@@ -7,6 +7,9 @@ if(strlen($_SESSION['alogin'])=="")
     header("Location: index.php"); 
     }
     else{
+
+$stid=intval($_GET['stid']);
+
 if(isset($_POST['submit']))
 {
 $studentname=$_POST['fullanme'];
@@ -15,28 +18,22 @@ $studentemail=$_POST['emailid'];
 $gender=$_POST['gender']; 
 $classid=$_POST['class']; 
 $dob=$_POST['dob']; 
-$status=1;
-$sql="INSERT INTO  tblstudents(StudentName,RollId,StudentEmail,Gender,ClassId,DOB,Status) VALUES(:studentname,:roolid,:studentemail,:gender,:classid,:dob,:status)";
+$status=$_POST['status'];
+$sql="update tblstudents set StudentName=:studentname,RollId=:roolid,StudentEmail=:studentemail,Gender=:gender,DOB=:dob,Status=:status where StudentId=:stid ";
 $query = $dbh->prepare($sql);
 $query->bindParam(':studentname',$studentname,PDO::PARAM_STR);
 $query->bindParam(':roolid',$roolid,PDO::PARAM_STR);
 $query->bindParam(':studentemail',$studentemail,PDO::PARAM_STR);
 $query->bindParam(':gender',$gender,PDO::PARAM_STR);
-$query->bindParam(':classid',$classid,PDO::PARAM_STR);
 $query->bindParam(':dob',$dob,PDO::PARAM_STR);
 $query->bindParam(':status',$status,PDO::PARAM_STR);
+$query->bindParam(':stid',$stid,PDO::PARAM_STR);
 $query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
-{
-$msg="Student info added successfully";
-}
-else 
-{
-$error="Something went wrong. Please try again";
+
+$msg="Student info updated successfully";
 }
 
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +41,7 @@ $error="Something went wrong. Please try again";
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Student Admission< </title>
+        <title> Teacher|Edit Student < </title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -82,7 +79,7 @@ $error="Something went wrong. Please try again";
                             <div class="row breadcrumb-div">
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
-                                        <li><a href="teacher_dashboard.php"><i class="fa fa-home"></i> Home</a></li>
+                                        <li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
                                 
                                         <li class="active">Student Admission</li>
                                     </ul>
@@ -112,18 +109,38 @@ else if($error){?>
                                         </div>
                                         <?php } ?>
                                                 <form class="form-horizontal" method="post">
+<?php 
+
+$sql = "SELECT tblstudents.StudentName,tblstudents.RollId,tblstudents.RegDate,tblstudents.StudentId,tblstudents.Status,tblstudents.StudentEmail,tblstudents.Gender,tblstudents.DOB,tblclasses.ClassName,tblclasses.Section from tblstudents join tblclasses on tblclasses.id=tblstudents.ClassId where tblstudents.StudentId=:stid";
+$query = $dbh->prepare($sql);
+$query->bindParam(':stid',$stid,PDO::PARAM_STR);
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$cnt=1;
+if($query->rowCount() > 0)
+{
+foreach($results as $result)
+{  ?>
+
 
 <div class="form-group">
 <label for="default" class="col-sm-2 control-label">Full Name</label>
 <div class="col-sm-10">
-<input type="text" name="fullanme" class="form-control" id="fullanme" required="required" autocomplete="off">
+<input type="text" name="fullanme" class="form-control" id="fullanme" value="<?php echo htmlentities($result->StudentName)?>" required="required" autocomplete="off">
 </div>
 </div>
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Student No</label>
+<label for="default" class="col-sm-2 control-label">Rool Id</label>
 <div class="col-sm-10">
-<input type="text" name="rollid" class="form-control" id="rollid" maxlength="5" required="required" autocomplete="off">
+<input type="text" name="rollid" class="form-control" id="rollid" value="<?php echo htmlentities($result->RollId)?>" maxlength="5" required="required" autocomplete="off">
+</div>
+</div>
+
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Email id)</label>
+<div class="col-sm-10">
+<input type="email" name="emailid" class="form-control" id="email" value="<?php echo htmlentities($result->StudentEmail)?>" required="required" autocomplete="off">
 </div>
 </div>
 
@@ -132,44 +149,72 @@ else if($error){?>
 <div class="form-group">
 <label for="default" class="col-sm-2 control-label">Gender</label>
 <div class="col-sm-10">
-<input type="radio" name="gender" value="Male" required="required" checked="">Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required">Other
+<?php  $gndr=$result->Gender;
+if($gndr=="Male")
+{
+?>
+<input type="radio" name="gender" value="Male" required="required" checked>Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required">Other
+<?php }?>
+<?php  
+if($gndr=="Female")
+{
+?>
+<input type="radio" name="gender" value="Male" required="required" >Male <input type="radio" name="gender" value="Female" required="required" checked>Female <input type="radio" name="gender" value="Other" required="required">Other
+<?php }?>
+<?php  
+if($gndr=="Other")
+{
+?>
+<input type="radio" name="gender" value="Male" required="required" >Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required" checked>Other
+<?php }?>
+
+
 </div>
 </div>
-
-
-
-
-
-
-
 
 
 
                                                     <div class="form-group">
                                                         <label for="default" class="col-sm-2 control-label">Class</label>
                                                         <div class="col-sm-10">
- <select name="class" class="form-control" id="default" required="required">
-<option value="">Select Class</option>
-<?php $sql = "SELECT * from tblclasses";
-$query = $dbh->prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{   ?>
-<option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassName); ?>&nbsp; Section-<?php echo htmlentities($result->Section); ?></option>
-<?php }} ?>
- </select>
+<input type="text" name="classname" class="form-control" id="classname" value="<?php echo htmlentities($result->ClassName)?>(<?php echo htmlentities($result->Section)?>)" readonly>
                                                         </div>
                                                     </div>
 <div class="form-group">
                                                         <label for="date" class="col-sm-2 control-label">DOB</label>
                                                         <div class="col-sm-10">
-                                                            <input type="date"  name="dob" class="form-control" id="date">
+                <input type="date"  name="dob" class="form-control" value="<?php echo htmlentities($result->DOB)?>" id="date">
                                                         </div>
                                                     </div>
-                                                    
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Reg Date: </label>
+<div class="col-sm-10">
+<?php echo htmlentities($result->RegDate)?>
+</div>
+</div>
+
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Status</label>
+<div class="col-sm-10">
+<?php  $stats=$result->Status;
+if($stats=="1")
+{
+?>
+<input type="radio" name="status" value="1" required="required" checked>Active <input type="radio" name="status" value="0" required="required">Block 
+<?php }?>
+<?php  
+if($stats=="0")
+{
+?>
+<input type="radio" name="status" value="1" required="required" >Active <input type="radio" name="status" value="0" required="required" checked>Block 
+<?php }?>
+
+
+
+</div>
+</div>
+
+<?php }} ?>                                                    
 
                                                     
                                                     <div class="form-group">

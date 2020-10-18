@@ -9,33 +9,40 @@ if(strlen($_SESSION['alogin'])=="")
     else{
 if(isset($_POST['submit']))
 {
-$studentname=$_POST['fullanme'];
-$roolid=$_POST['rollid']; 
-$studentemail=$_POST['emailid']; 
-$gender=$_POST['gender']; 
-$classid=$_POST['class']; 
-$dob=$_POST['dob']; 
-$status=1;
-$sql="INSERT INTO  tblstudents(StudentName,RollId,StudentEmail,Gender,ClassId,DOB,Status) VALUES(:studentname,:roolid,:studentemail,:gender,:classid,:dob,:status)";
+    $marks=array();
+$class=$_POST['class'];
+$studentid=$_POST['studentid']; 
+$mark=$_POST['marks'];
+
+ $stmt = $dbh->prepare("SELECT tblsubjects.SubjectName,tblsubjects.id FROM tblsubjectcombination join  tblsubjects on  tblsubjects.id=tblsubjectcombination.SubjectId WHERE tblsubjectcombination.ClassId=:cid order by tblsubjects.SubjectName");
+ $stmt->execute(array(':cid' => $class));
+  $sid1=array();
+ while($row=$stmt->fetch(PDO::FETCH_ASSOC))
+ {
+
+array_push($sid1,$row['id']);
+   } 
+  
+for($i=0;$i<count($mark);$i++){
+    $mar=$mark[$i];
+  $sid=$sid1[$i];
+$sql="INSERT INTO  tblresult(StudentId,ClassId,SubjectId,marks) VALUES(:studentid,:class,:sid,:marks)";
 $query = $dbh->prepare($sql);
-$query->bindParam(':studentname',$studentname,PDO::PARAM_STR);
-$query->bindParam(':roolid',$roolid,PDO::PARAM_STR);
-$query->bindParam(':studentemail',$studentemail,PDO::PARAM_STR);
-$query->bindParam(':gender',$gender,PDO::PARAM_STR);
-$query->bindParam(':classid',$classid,PDO::PARAM_STR);
-$query->bindParam(':dob',$dob,PDO::PARAM_STR);
-$query->bindParam(':status',$status,PDO::PARAM_STR);
+$query->bindParam(':studentid',$studentid,PDO::PARAM_STR);
+$query->bindParam(':class',$class,PDO::PARAM_STR);
+$query->bindParam(':sid',$sid,PDO::PARAM_STR);
+$query->bindParam(':marks',$mar,PDO::PARAM_STR);
 $query->execute();
 $lastInsertId = $dbh->lastInsertId();
 if($lastInsertId)
 {
-$msg="Student info added successfully";
+$msg="Result info added successfully";
 }
 else 
 {
 $error="Something went wrong. Please try again";
 }
-
+}
 }
 ?>
 <!DOCTYPE html>
@@ -44,7 +51,7 @@ $error="Something went wrong. Please try again";
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Student Admission< </title>
+        <title> Result </title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -53,6 +60,50 @@ $error="Something went wrong. Please try again";
         <link rel="stylesheet" href="css/select2/select2.min.css" >
         <link rel="stylesheet" href="css/main.css" media="screen" >
         <script src="js/modernizr/modernizr.min.js"></script>
+        <script>
+function getStudent(val) {
+    $.ajax({
+    type: "POST",
+    url: "get_student.php",
+    data:'classid='+val,
+    success: function(data){
+        $("#studentid").html(data);
+        
+    }
+    });
+$.ajax({
+        type: "POST",
+        url: "get_student.php",
+        data:'classid1='+val,
+        success: function(data){
+            $("#subject").html(data);
+            
+        }
+        });
+}
+    </script>
+<script>
+
+function getresult(val,clid) 
+{   
+    
+var clid=$(".clid").val();
+var val=$(".stid").val();;
+var abh=clid+'$'+val;
+//alert(abh);
+    $.ajax({
+        type: "POST",
+        url: "get_student.php",
+        data:'studclass='+abh,
+        success: function(data){
+            $("#reslt").html(data);
+            
+        }
+        });
+}
+</script>
+
+
     </head>
     <body class="top-navbar-fixed">
         <div class="main-wrapper">
@@ -72,7 +123,7 @@ $error="Something went wrong. Please try again";
                      <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Student Admission</h2>
+                                    <h2 class="title">Declare Result</h2>
                                 
                                 </div>
                                 
@@ -84,7 +135,7 @@ $error="Something went wrong. Please try again";
                                     <ul class="breadcrumb">
                                         <li><a href="teacher_dashboard.php"><i class="fa fa-home"></i> Home</a></li>
                                 
-                                        <li class="active">Student Admission</li>
+                                        <li class="active">Student Result</li>
                                     </ul>
                                 </div>
                              
@@ -96,11 +147,7 @@ $error="Something went wrong. Please try again";
                         <div class="row">
                                     <div class="col-md-12">
                                         <div class="panel">
-                                            <div class="panel-heading">
-                                                <div class="panel-title">
-                                                    <h5>Fill the Student info</h5>
-                                                </div>
-                                            </div>
+                                           
                                             <div class="panel-body">
 <?php if($msg){?>
 <div class="alert alert-success left-icon-alert" role="alert">
@@ -113,42 +160,10 @@ else if($error){?>
                                         <?php } ?>
                                                 <form class="form-horizontal" method="post">
 
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Full Name</label>
-<div class="col-sm-10">
-<input type="text" name="fullanme" class="form-control" id="fullanme" required="required" autocomplete="off">
-</div>
-</div>
-
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Student No</label>
-<div class="col-sm-10">
-<input type="text" name="rollid" class="form-control" id="rollid" maxlength="5" required="required" autocomplete="off">
-</div>
-</div>
-
-
-
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Gender</label>
-<div class="col-sm-10">
-<input type="radio" name="gender" value="Male" required="required" checked="">Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required">Other
-</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-                                                    <div class="form-group">
-                                                        <label for="default" class="col-sm-2 control-label">Class</label>
-                                                        <div class="col-sm-10">
- <select name="class" class="form-control" id="default" required="required">
+ <div class="form-group">
+<label for="default" class="col-sm-2 control-label">Class</label>
+ <div class="col-sm-10">
+ <select name="class" class="form-control clid" id="classid" onChange="getStudent(this.value);" required="required">
 <option value="">Select Class</option>
 <?php $sql = "SELECT * from tblclasses";
 $query = $dbh->prepare($sql);
@@ -164,17 +179,37 @@ foreach($results as $result)
                                                         </div>
                                                     </div>
 <div class="form-group">
-                                                        <label for="date" class="col-sm-2 control-label">DOB</label>
+                                                        <label for="date" class="col-sm-2 control-label ">Student Name</label>
                                                         <div class="col-sm-10">
-                                                            <input type="date"  name="dob" class="form-control" id="date">
+                                                    <select name="studentid" class="form-control stid" id="studentid" required="required" onChange="getresult(this.value);">
+                                                    </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                      
+                                                        <div class="col-sm-10">
+                                                    <div  id="reslt">
+                                                    </div>
                                                         </div>
                                                     </div>
                                                     
+<div class="form-group">
+                                                        <label for="date" class="col-sm-2 control-label">Subjects</label>
+                                                        <div class="col-sm-2">
+                                                            
+                                                    <div  id="subject">
+                                                        
+                                                    </div>
+                                                        </div>
+                                                    </div>
+ 
+
 
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-offset-2 col-sm-10">
-                                                            <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                                            <button type="submit" name="submit" id="submit" class="btn btn-primary">Declare Result</button>
                                                         </div>
                                                     </div>
                                                 </form>

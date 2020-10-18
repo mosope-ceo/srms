@@ -14,7 +14,7 @@ if(strlen($_SESSION['alogin'])=="")
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Student Result Management System | Dashboard</title>
+        <title>Dashboard</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -55,7 +55,7 @@ if(strlen($_SESSION['alogin'])=="")
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="dashboard-stat bg-primary" href="manage-students.php">
+                                        <a class="dashboard-stat bg-primary" href="teacher_manage-students.php">
                                     <?php 
                                     $sql1 ="SELECT StudentId from tblstudents ";
                                     $query1 = $dbh -> prepare($sql1);
@@ -71,7 +71,22 @@ if(strlen($_SESSION['alogin'])=="")
                                                                             <!-- /.dashboard-stat -->
                                                                         </div>
 
+                                                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                        <a class="dashboard-stat bg-success" href="teacher_manage-results.php">
+                                        <?php 
+$sql3="SELECT  distinct StudentId from  tblresult ";
+$query3 = $dbh -> prepare($sql3);
+$query3->execute();
+$results3=$query3->fetchAll(PDO::FETCH_OBJ);
+$totalresults=$query3->rowCount();
+?>
 
+                                            <span class="number counter"><?php echo htmlentities($totalresults);?></span>
+                                            <span class="name">Results Declared</span>
+                                            <span class="bg-icon"><i class="fa fa-file-text"></i></span>
+                                        </a>
+                                        
+                                        <!-- /.dashboard-stat -->
 
 
 
