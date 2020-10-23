@@ -47,7 +47,7 @@ if(strlen($_SESSION['alogin'])=="")
                       
                         </div>
                         <!-- /.container-fluid -->
-                        <a href="dashboard.php">dashboard</a> 
+                        <!-- <a href="dashboard.php">dashboard</a>  -->
                         
                         
 

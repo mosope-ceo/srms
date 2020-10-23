@@ -40,7 +40,7 @@ if(strlen($_SESSION['alogin'])=="")
                             <div class="row page-title-div">
                                 <div class="col-sm-6">
                                     <h2 class="title">Dashboard</h2>
-                                  <a href="teacher_dashboard.php">teacher_dashboard</a>
+                                  <!-- <a href="teacher_dashboard.php">teacher_dashboard</a> -->
                                 </div>
                                 <!-- /.col-sm-6 -->
                             </div>

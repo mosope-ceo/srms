@@ -71,6 +71,7 @@
 <div class="top-link">
 <a href="find-result.php"><button type="button" class="btn btn-outline-success top-link-btn1">Student Login</button></a>
 <a href="admin.php"><button type="button" class="btn btn-outline-success top-link-btn2">Admin Login</button></a>
+<a href="teacher_login.php"><button type="button" class="btn btn-outline-success top-link-btn2">Teacher Login</button></a>
 </div>
 <!-- login section -->
 <footer>
