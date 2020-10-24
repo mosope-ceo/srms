@@ -10,6 +10,7 @@ if(isset($_POST['login']))
 $uname=$_POST['username'];
 $password=md5($_POST['password']);
 $sql ="SELECT UserName,Password FROM admin WHERE UserName=:uname and Password=:password";
+$sql = "SELECT * FROM `admin`";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':uname', $uname, PDO::PARAM_STR);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
@@ -45,7 +46,7 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
     </head>
     <body class="">
     <style media="screen">
-      .login{
+.login{
         height: 400px;
         background-color: #f1f3f8;
         width: 30%;
@@ -66,14 +67,17 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
           margin-top: 10%;
         }
       }
-.h5-title{
+
+      .h5-title{
   text-align: center;
   margin: 4%;
 }
 .head-title{
   text-align: center;
 }
-
+body:{
+    text-align:center;
+}
 .top-link{
   /* height: 34px;
   background-color: #f1f3f8;
@@ -92,13 +96,13 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
    
 }
 .inpt{
-    margin-left:100px;
+    margin-left:5%;
 }
 .inpt-log{
     margin-top:3%;
     text-align:center;
 }
-  </style>
+</style>
 
 
 
@@ -116,42 +120,33 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
 <a href="index.php"><button type="button" class="btn btn-outline-success top-link-btn2">Home page</button></a>
 </div>
 <!-- login section --> 
-<!--                                         
-                                            <div class="row">       
-                                                <div class="container-fluid"> -->
-                                                    <div class="login">
-                                                        <div class="inpt-log">
-                                                            <h4 class="admin-log">Admin Login</h4>
-                                                            
-                                                            <div class="panel-body p-20">
+                                    
+ <div class="login">
+<form  method="post">
+<h4 class="admin-log">Admin Login</h4>
+<div class="inpt">
 
-                                                                <!-- <div class="section-title">
-                                                                    <p class="sub-title">Student Result Management System</p>
-                                                                </div> -->
+        <div class="form-group col-sm-11">
+        <label for="teacher_username">Username</label>
+            <input type="text" name="username"placeholder="Username" class="form-control " id="inputEmail3">
+        </div>
+        <div class="form-group col-sm-11">
+        <label for="teacher_password">Password</label>
+            <input type="password" name="password"placeholder="password" class="form-control" id="inputPassword3">
+        
+        </div>
+        <div class="form-group mt-20">
+            <div class="col-sm-offset-2 col-sm-7">                                                        
+              <button type="submit" name="login" align="center" class="btn btn-success btn-block ">Sign in<span>&nbsp<i class="fa fa-check"></i></span></button>
+           </div>
+        </div>
+        
+      
+<!-- </div> -->
 
-                                                                <form class="form-horizontal" method="post">
-                                                                    <div class="form-group">
-                                                                        <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
-                                                                        <div class="col-sm-8">
-                                                                            <input type="text" name="username" class="form-control " id="inputEmail3" placeholder="UserName">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="inputPassword3" class="col-sm-3 control-label">Password</label>
-                                                                        <div class="col-sm-8">
-                                                                            <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="Password">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group mt-20">
-                                                                        <div class="col-sm-offset-2 col-sm-9">
-                                                                    
-                                                                            <button type="submit" name="login" class="btn btn-success btn-labeled pull-right">Sign in<span class="btn-label btn-label-right"><i class="fa fa-check"></i></span></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
+</form>
+</div>
+                                                        <!-- </div> -->
                                                     <!-- <div class="section-title">
                                                         <p align="center" class="sub-title">Student Result Management System</p>
                                                     </div> -->

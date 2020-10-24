@@ -78,7 +78,7 @@ foreach($resultss as $row)
 
     ?>
                                             </div>
-                                            <div class="panel-body p-20">
+                                            <div class="panel-body p-20 container-fluid">
 
 
 
@@ -92,8 +92,7 @@ foreach($resultss as $row)
                                                             <th style="text-align: center">#</th>
                                                             <th style="text-align: center"> Subject</th>    
                                                             <th style="text-align: center">Total /100</th>
-                                                            <th style="text-align: center">Assigment /20</th>
-                                                            <th style="text-align: center">Quiz /20</th>
+                                                            <th style="text-align: center">Continous asses. /40</th>
                                                             <th style="text-align: center">Exam /60</th>
                                                             
                                                         </tr>
@@ -106,7 +105,7 @@ foreach($resultss as $row)
 <?php                                              
 // Code for result
 
- $query ="select t.StudentName,t.RollId,t.ClassId,t.marks,SubjectId,tblsubjects.SubjectName from (select sts.StudentName,sts.RollId,sts.ClassId,tr.marks,SubjectId from tblstudents as sts join  tblresult as tr on tr.StudentId=sts.StudentId) as t join tblsubjects on tblsubjects.id=t.SubjectId where (t.RollId=:rollid and t.ClassId=:classid)";
+ $query ="select t.StudentName,t.RollId,t.ClassId,t.marks,SubjectId,tblsubjects.SubjectName from (select sts.StudentName,sts.RollId,sts.ClassId,tr.marks,tr.Exam,tr.CA,SubjectId from tblstudents as sts join  tblresult as tr on tr.StudentId=sts.StudentId) as t join tblsubjects on tblsubjects.id=t.SubjectId where (t.RollId=:rollid and t.ClassId=:classid)";
 $query= $dbh -> prepare($query);
 $query->bindParam(':rollid',$rollid,PDO::PARAM_STR);
 $query->bindParam(':classid',$classid,PDO::PARAM_STR);
@@ -123,9 +122,9 @@ foreach($results as $result){
 <th scope="row" style="text-align: center"><?php echo htmlentities($cnt);?></th>
 <td style="text-align: center"><?php echo htmlentities($result->SubjectName);?></td>
 <td style="text-align: center"><?php echo htmlentities($totalmarks=$result->marks);?></td>
-<td style="text-align: center"><?php echo htmlentities($result->assignment);?></td>
-<td style="text-align: center"><?php echo htmlentities($result->Quiz);?></td>
+<td style="text-align: center"><?php echo htmlentities($result->CA);?></td>
 <td style="text-align: center"><?php echo htmlentities($result->Exam);?></td>
+
                                                 		</tr>
 <?php 
 $totlcount+=$totalmarks;

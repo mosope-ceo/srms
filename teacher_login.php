@@ -9,7 +9,8 @@ if(isset($_POST['login']))
 {
 $uname=$_POST['username'];
 $password=md5($_POST['password']);
-$sql ="SELECT UserName,Password FROM admin WHERE UserName=:uname and Password=:password";
+$sql ="SELECT UserName,Password FROM teacher WHERE UserName=:uname and Password=:password";
+$sql = "SELECT * FROM `teacher`";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':uname', $uname, PDO::PARAM_STR);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
@@ -18,7 +19,7 @@ $results=$query->fetchAll(PDO::FETCH_OBJ);
 if($query->rowCount() > 0)
 {
 $_SESSION['alogin']=$_POST['username'];
-echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+echo "<script type='text/javascript'> document.location = 'teacher_dashboard.php'; </script>";
 } else{
 
     echo "<script>alert('Invalid Details');</script>";
@@ -28,6 +29,7 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,22 +121,22 @@ body:{
 
 <div class="login">
 
-<form action= ""  method="post">
+<form  method="post">
 <h4 class="admin-log">Teacher Login</h4>
 <div class="inpt">
 
         <div class="form-group col-sm-11">
         <label for="teacher_username">Username</label>
-            <input type="text"id="name" name="username"placeholder="Username" class="form-control ">
+            <input type="text" name="username"placeholder="Username" class="form-control " id="inputEmail3">
         </div>
         <div class="form-group col-sm-11">
         <label for="teacher_password">Password</label>
-            <input type="password" name="password"placeholder="password" class="form-control">
+            <input type="password" name="password"placeholder="password" class="form-control" id="inputPassword3">
         
         </div>
         <div class="form-group mt-20">
             <div class="col-sm-offset-2 col-sm-7">                                                        
-              <button type="submit" name="submit" align="center" class="btn btn-success btn-block ">Sign in<span>&nbsp<i class="fa fa-check"></i></span></button>
+              <button type="submit" name="login" align="center" class="btn btn-success btn-block ">Sign in<span>&nbsp<i class="fa fa-check"></i></span></button>
            </div>
         </div>
         

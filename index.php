@@ -37,11 +37,11 @@
       }
 .h5-title{
   text-align: center;
-  margin: 4%;
-}
+  margin: 2%;
+} 
 .head-title{
   text-align: center;
-}
+} 
 
 .top-link{
   /* height: 34px;
@@ -55,18 +55,21 @@
 .top-link-btn2{
   margin-left: 3%;
 }
+.logo{
+  float:left;
+}
   </style>
 
 
 
     <body class="admin-log">
-<!-- navbar -->
-      <nav class="navbar navbar-light bg-light ">
+     <nav class="navbar navbar-light bg-light ">
+       
         <div class="head-title">
-          <h2 class="navbar-text container-fluid">SAMUEL ADEGBITE ANGLICAN COLLEGE</h2>
-          <h5 class="h5-title">Student Result Management System</h5>
+         <h2 class="navbar-text container-fluid">SAMUEL ADEGBITE ANGLICAN COLLEGE</h2>
+         <h5 class="h5-title">Student Result Management System</h5>
           </div>
-        </nav>
+        </nav> 
 <!-- end of navbar -->
 <div class="top-link">
 <a href="find-result.php"><button type="button" class="btn btn-outline-success top-link-btn1">Student Login</button></a>

@@ -32,10 +32,12 @@ if(!empty($_POST["classid1"]))
  $status=0;	
  $stmt = $dbh->prepare("SELECT tblsubjects.SubjectName,tblsubjects.id FROM tblsubjectcombination join  tblsubjects on  tblsubjects.id=tblsubjectcombination.SubjectId WHERE tblsubjectcombination.ClassId=:cid and tblsubjectcombination.status!=:stts order by tblsubjects.SubjectName");
  $stmt->execute(array(':cid' => $cid1,':stts' => $status));
- 
+ $sql = "SELECT * FROM `tblresult`";
  while($row=$stmt->fetch(PDO::FETCH_ASSOC))
- {?>
-  <p> <?php echo htmlentities($row['SubjectName']); ?><input type="text"  name="marks[]" value="" class="form-control" required="" placeholder="Enter marks out of 100" autocomplete="off"></p>
+ {?> 
+
+ 
+  <p> <?php echo htmlentities($row['SubjectName']); ?><input type="text"  name="marks[]" value="" class="form-control" required="" placeholder="Enter total score" autocomplete="off"></p><p><input type="text"  name="Exam[]" value="" class="form-control" required="" placeholder="Enter Examination" autocomplete="off"></p><p><input type="text"  name="CA[]" value="" class="form-control" required="" placeholder="Enter Continous assesment Score" autocomplete="off"></p>
   
 <?php  }
 }
