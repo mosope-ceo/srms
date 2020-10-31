@@ -194,18 +194,17 @@ foreach($results as $result)
                                                         </div>
                                                     </div>
                                                     
-<div class="form-group">
+<div class="form-group container-fluid">
                                                         <label for="date" class="col-sm-2 control-label">Subjects</label>
-                                                        <div class="col-sm-2">
+                                                        <div class="col-sm-4">
                                                             
-                                                    <div  id="subject">
+                                                    <div  id="subject"> 
                                                         
                                                     </div>
+                                                   
                                                         </div>
                                                     </div>
- 
-
-
+  
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-offset-2 col-sm-10">

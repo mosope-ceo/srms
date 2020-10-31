@@ -4,7 +4,7 @@ error_reporting(0);
 include('includes/config.php');
 if(strlen($_SESSION['alogin'])=="")
     {   
-    header("Location: admin.php"); 
+    header("Location: index.php"); 
     }
     else{
         ?>
@@ -155,4 +155,4 @@ $totalresults=$query3->rowCount();
         </script>
     </body>
 </html>
-<?php } ?>
+        <?php } ?>
